@@ -1,26 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-<style>
-.card {
-  width: 100px;
-  height: 100px;
-  border: 1px solid black;
-  display: inline-block;
-  margin: 10px;
-  text-align: center;
-  vertical-align: top;
-  line-height: 100px;
-  font-size: 2em;
-  cursor: pointer;
-}
-</style>
 <script>
 window.onload = function() {
   var cards = ['A', 'A', 'B', 'B', 'C', 'C', 'D', 'D'];
-  cards.sort(function() { return 0.5 - Math.random(); }); // Shuffle the cards
+  var shuffledCards;
   var selectedCards = [];
   var numMatches = 0;
+
+  function resetGame() {
+    shuffledCards = [...cards].sort(function() { return 0.5 - Math.random(); }); // Shuffle the cards
+    numMatches = 0;
+    selectedCards = [];
+    document.querySelectorAll('.card').forEach((card, index) => {
+      card.dataset.value = shuffledCards[index];
+      card.textContent = '';
+    });
+  }
 
   function cardClick(e) {
     if (selectedCards.length < 2 && e.target.textContent == '') {
@@ -35,8 +28,9 @@ window.onload = function() {
   function checkMatch() {
     if (selectedCards[0].dataset.value == selectedCards[1].dataset.value) {
       numMatches++;
-      if (numMatches == cards.length / 2) {
+      if (numMatches == shuffledCards.length / 2) {
         alert('You win!');
+        resetGame();
       }
     } else {
       selectedCards[0].textContent = '';
@@ -48,13 +42,10 @@ window.onload = function() {
   for (var i = 0; i < cards.length; i++) {
     var card = document.createElement('div');
     card.className = 'card';
-    card.dataset.value = cards[i];
     card.onclick = cardClick;
     document.body.appendChild(card);
   }
+  
+  resetGame(); // Initialize the game
 };
 </script>
-</head>
-<body>
-</body>
-</html>
